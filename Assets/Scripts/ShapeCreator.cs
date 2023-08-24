@@ -8,7 +8,7 @@ namespace ShatterShapes
         
         private void Start()
         {
-            CreateRect(10, 100);
+            CreateCircle(10);
         }
 
         public void CreateQuad(int a)
