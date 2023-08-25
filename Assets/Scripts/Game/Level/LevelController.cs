@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.Drawing;
+using ShatterShapes.Core;
 using ShatterShapes.Core.Object_Pooling;
-using ShatterShapes.Extensions;
 using UnityEngine;
 using Color = UnityEngine.Color;
 
@@ -13,7 +12,6 @@ namespace ShatterShapes.Game.Level
         [SerializeField] private LevelShapesCreator _levelShapesCreator;
 
         private LevelColorsConfigLoader _colorsConfigLoader;
-        private List<Color> _levelColors;
 
         private void Awake()
         {
@@ -24,21 +22,16 @@ namespace ShatterShapes.Game.Level
             LevelEventsHandler.LevelReady?.Invoke();
         }
 
-        public Color GetRandomLevelColor()
-        {
-            if (_levelColors.Count == 0) return Color.clear;
-            return _levelColors[Random.Range(0, _levelColors.Count)];
-        }
-
         private void LoadLevelColors()
         {
             var colorsConfig = _colorsConfigLoader.LoadLevelColors();
-            _levelColors = new List<Color>();
+            List<Color> levelColors = new List<Color>();
             foreach (var color in colorsConfig)
             {
                 ColorUtility.TryParseHtmlString(color.hex, out var parsedColor);
-                _levelColors.Add(parsedColor);
+                levelColors.Add(parsedColor);
             }
+            Parameters.SetLevelColors(levelColors);
         }
 
         

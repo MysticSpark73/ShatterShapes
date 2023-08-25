@@ -12,6 +12,8 @@ namespace ShatterShapes.ShatteredObjects
         private Vector3 _initialLocalPosition;
         private Vector3 _initialLocalRotation;
         private Vector3 _initialLocalScale;
+            
+        private float _shatterImpulse = 100;
         
         public void Init(object[] args = null)
         {
@@ -25,16 +27,18 @@ namespace ShatterShapes.ShatteredObjects
 
         public void ResetPiece()
         {
+            _rigidbody.isKinematic = true;
+            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.angularVelocity = Vector3.zero;
             _selfTransform.localPosition = _initialLocalPosition;
             _selfTransform.eulerAngles = _initialLocalRotation;
             _selfTransform.localScale = _initialLocalScale;
-            _rigidbody.isKinematic = true;
         }
 
         public void OnShatter()
         {
             _rigidbody.isKinematic = false;
-            //todo: probably apply some force es well
+            //_rigidbody.AddForce(-transform.forward * _shatterImpulse, ForceMode.Impulse);
         }
 
         public void SetColor(Color color) => _renderer.materials[0].color = color;

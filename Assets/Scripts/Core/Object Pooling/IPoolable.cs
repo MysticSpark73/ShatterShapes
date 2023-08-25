@@ -6,6 +6,7 @@ namespace ShatterShapes.Core.Object_Pooling
     public interface IPoolable
     {
         public ObjectsPool KeyPool { get; set; }
+        
         void OnPooled();
 
         void OnReturn();
@@ -13,9 +14,5 @@ namespace ShatterShapes.Core.Object_Pooling
         void SetPosition(Vector3 pos, Transform container = null);
 
         void SetActive(bool value);
-
-        void SetParent(Transform parent);
-        
-        void SetLevelController(LevelController levelController);
     }
 }

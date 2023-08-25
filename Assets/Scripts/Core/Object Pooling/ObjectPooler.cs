@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ShatterShapes.Extensions;
 using ShatterShapes.Game.Level;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace ShatterShapes.Core.Object_Pooling
 {
@@ -15,7 +17,13 @@ namespace ShatterShapes.Core.Object_Pooling
 
         public void Init(object[] args = null)
         {
+            LevelEventsHandler.ObjectExpired += OnObjectExpired;
             GeneratePools();
+        }
+
+        private void OnApplicationQuit()
+        {
+            LevelEventsHandler.ObjectExpired -= OnObjectExpired;
         }
 
         public IPoolable SpawnFromPool(ObjectsPool key, Vector3 position, Transform container = null)
@@ -33,7 +41,6 @@ namespace ShatterShapes.Core.Object_Pooling
                 Debug.LogError($"The pool with key {key} is empty");
                 return null;
             }
-            pooledObject.SetLevelController(_levelController);
             pooledObject.SetPosition(position, container);
             pooledObject.OnPooled();
             pooledObject.SetActive(true);
@@ -49,7 +56,7 @@ namespace ShatterShapes.Core.Object_Pooling
                 Debug.LogError($"There is no key {key} in pools dictionary");
                 return;
             }
-            obj.SetParent(_objectPools.FirstOrDefault(p => p.tag == key).poolContainer);
+            obj.SetPosition( Vector3.zero, _objectPools.FirstOrDefault(p => p.tag == key).poolContainer);
             _poolsDictionary[key].Enqueue(obj);
         }
 
@@ -76,6 +83,11 @@ namespace ShatterShapes.Core.Object_Pooling
                     obj.SetActive(false);
                 }
             }
+        }
+
+        private void OnObjectExpired(ObjectsPool pool, IPoolable obj)
+        {
+            ReturnToPool(pool, obj);
         }
 
         [System.Serializable]

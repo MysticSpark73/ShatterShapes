@@ -79,7 +79,7 @@ namespace ShatterShapes.Game.Level
                     CreatePyramid(5);
                     break;
                 case 3:
-                    CreateCircle(6);
+                    CreateCircle(3);
                     break;
             }
         }

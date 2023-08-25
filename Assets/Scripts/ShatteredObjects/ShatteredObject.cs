@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ShatterShapes.Core;
 using ShatterShapes.Core.Object_Pooling;
 using ShatterShapes.Game.Level;
 using UnityEngine;
@@ -8,14 +9,14 @@ namespace ShatterShapes.ShatteredObjects
     public class ShatteredObject : MonoBehaviour, IPoolable
     {
         [SerializeField] private List<ShatteredPiece> _pieces;
-
-        private LevelController _levelController;
+        [SerializeField] private Collider _selfCollider;
 
         public ObjectsPool KeyPool { get; set; }
 
         public void OnPooled()
         {
-            Color color = _levelController != null ? _levelController.GetRandomLevelColor() : Color.clear;
+            _selfCollider.enabled = true;
+            Color color = Parameters.GetRandomLevelColor();
             foreach (var piece in _pieces)
             {
                 piece.Init();
@@ -44,16 +45,24 @@ namespace ShatterShapes.ShatteredObjects
         }
 
         public void SetActive(bool value) => gameObject.SetActive(value);
-        public void SetParent(Transform parent) => transform.SetParent(parent);
-
-        public void SetLevelController(LevelController levelController) => _levelController = levelController;
 
         private void OnCollisionEnter(Collision collision)
         {
-            foreach (var piece in _pieces)
+            if (collision.gameObject.CompareTag("Projectile"))
             {
-                piece.OnShatter();
+                _selfCollider.enabled = false;
+                foreach (var piece in _pieces)
+                {
+                    piece.OnShatter();
+                }
+                DestroyAsync();
             }
+        }
+
+        private async void DestroyAsync()
+        {
+            await new WaitForSeconds(10);
+            LevelEventsHandler.ObjectExpired?.Invoke(KeyPool, this);
         }
     }
 }
