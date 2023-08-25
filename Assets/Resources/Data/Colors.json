@@ -1,24 +1,22 @@
-{
-  "colors": [
+ [
     {
-      "color" : "Rojo",
+      "name" : "Rojo",
       "hex" : "#DF2020"
     },
     {
-      "color" : "Chrysler blue",
+      "name" : "Chrysler blue",
       "hex" : "#2020DF"
     },
     {
-      "color" : "Aquamarine",
+      "name" : "Aquamarine",
       "hex" : "#56E39F"
     },
     {
-      "color" : "Sky magenta",
+      "name" : "Sky magenta",
       "hex" : "#C45BAA"
     },
     {
-      "color" : "Amber",
+      "name" : "Amber",
       "hex" : "#F3B700"
     }
   ]
-}

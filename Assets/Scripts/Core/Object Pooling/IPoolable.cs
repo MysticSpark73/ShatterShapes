@@ -1,9 +1,11 @@
+using ShatterShapes.Game.Level;
 using UnityEngine;
 
 namespace ShatterShapes.Core.Object_Pooling
 {
     public interface IPoolable
     {
+        public ObjectsPool KeyPool { get; set; }
         void OnPooled();
 
         void OnReturn();
@@ -13,5 +15,7 @@ namespace ShatterShapes.Core.Object_Pooling
         void SetActive(bool value);
 
         void SetParent(Transform parent);
+        
+        void SetLevelController(LevelController levelController);
     }
 }

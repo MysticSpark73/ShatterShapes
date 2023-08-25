@@ -7,14 +7,16 @@ namespace ShatterShapes.ShatteredObjects
     public class ShatteredPiece : MonoBehaviour, IInitable
     {
         private Rigidbody _rigidbody;
+        private MeshRenderer _renderer;
         private Transform _selfTransform;
         private Vector3 _initialLocalPosition;
         private Vector3 _initialLocalRotation;
         private Vector3 _initialLocalScale;
         
-        public void Init()
+        public void Init(object[] args = null)
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _renderer = GetComponent<MeshRenderer>();
             _selfTransform = transform;
             _initialLocalPosition = _selfTransform.localPosition;
             _initialLocalRotation = _selfTransform.localRotation.eulerAngles;
@@ -34,5 +36,7 @@ namespace ShatterShapes.ShatteredObjects
             _rigidbody.isKinematic = false;
             //todo: probably apply some force es well
         }
+
+        public void SetColor(Color color) => _renderer.materials[0].color = color;
     }
 }

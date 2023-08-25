@@ -1,17 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using ShatterShapes.Extensions;
+using ShatterShapes.Game.Level;
 using UnityEngine;
 
 namespace ShatterShapes.Core.Object_Pooling
 {
-    public class ObjectPooler : MonoBehaviour
+    public class ObjectPooler : MonoBehaviour, IInitable
     {
         [SerializeField] private List<PoolableObject> _objectPools;
+        [SerializeField] private LevelController _levelController;
 
         private Dictionary<ObjectsPool, Queue<IPoolable>> _poolsDictionary;
-        
-        private void Awake()
+
+        public void Init(object[] args = null)
         {
             GeneratePools();
         }
@@ -31,6 +33,7 @@ namespace ShatterShapes.Core.Object_Pooling
                 Debug.LogError($"The pool with key {key} is empty");
                 return null;
             }
+            pooledObject.SetLevelController(_levelController);
             pooledObject.SetPosition(position, container);
             pooledObject.OnPooled();
             pooledObject.SetActive(true);
@@ -50,6 +53,8 @@ namespace ShatterShapes.Core.Object_Pooling
             _poolsDictionary[key].Enqueue(obj);
         }
 
+        public ObjectsPool GetRandomPool() => _objectPools[Random.Range(0, _objectPools.Count)].tag;
+
         private void GeneratePools()
         {
             _poolsDictionary = new Dictionary<ObjectsPool, Queue<IPoolable>>();
@@ -59,12 +64,14 @@ namespace ShatterShapes.Core.Object_Pooling
                 for (int i = 0; i < pool.poolSize; i++)
                 {
                     GameObject obj = Instantiate(pool.prefab, pool.poolContainer);
+                    obj.name = $"{pool.tag} {i}";
                     IPoolable poolableObject = obj.GetComponent<IPoolable>();
                     if (poolableObject == null)
                     {
                         Debug.LogError($"Poolable object's prefab with the tag {pool.tag} don't have IPoolable component");
                         break;
                     }
+                    poolableObject.KeyPool = pool.tag;
                     _poolsDictionary[pool.tag].Enqueue(poolableObject);
                     obj.SetActive(false);
                 }

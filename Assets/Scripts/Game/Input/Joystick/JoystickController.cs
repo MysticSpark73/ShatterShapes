@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace ShatterShapes.Game.Input.Joystick
@@ -7,5 +8,11 @@ namespace ShatterShapes.Game.Input.Joystick
         [SerializeField] private global::Joystick _joystick;
 
         public Vector2 Direction => _joystick.Direction;
+
+
+        private void Update()
+        {
+            InputEventsHandler.JoystickDirectionChanged?.Invoke(Direction);
+        }
     }
 }

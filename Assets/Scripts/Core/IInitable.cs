@@ -2,6 +2,6 @@ namespace ShatterShapes.Core
 {
     public interface IInitable
     {
-        void Init() { }
+        void Init(object[] args = null);
     }
 }

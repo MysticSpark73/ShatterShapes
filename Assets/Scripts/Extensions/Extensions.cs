@@ -15,5 +15,13 @@ namespace ShatterShapes.Extensions
                 dictionary.Add(key, value);
             }
         }
+
+        public static void AddSafe<T>(this List<T> list, T obj)
+        {
+            if (!list.Contains(obj))
+            {
+                list.Add(obj);
+            }
+        }
     }
 }
