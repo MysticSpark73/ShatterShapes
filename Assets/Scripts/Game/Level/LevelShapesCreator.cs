@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ShatterShapes.Core.Object_Pooling;
 using ShatterShapes.ShatteredObjects;
 using UnityEngine;
@@ -60,6 +61,7 @@ namespace ShatterShapes.Game.Level
 
         public void CreateCircle(int r)
         {
+            List<Vector3> positions = new List<Vector3>();
             for (int i = 0; i < r; i++)
             {
                 int objectsInCircle = Mathf.Max(1, i * 8);
@@ -69,7 +71,9 @@ namespace ShatterShapes.Game.Level
                         Mathf.RoundToInt(Mathf.Sin(Mathf.Deg2Rad * j * (float)(360.0f/objectsInCircle)) * i), 
                         Mathf.RoundToInt(Mathf.Cos(Mathf.Deg2Rad * j * (float)(360.0f/objectsInCircle)) * i),
                         0);
-
+                    
+                    if (positions.Contains(offset)) continue;
+                    positions.Add(offset);
                     PoolObject(transform.position + offset);
                 }
             }
@@ -91,7 +95,7 @@ namespace ShatterShapes.Game.Level
                     CreatePyramid(5);
                     break;
                 case 3:
-                    CreateCircle(3);
+                    CreateCircle(4);
                     break;
             }
         }

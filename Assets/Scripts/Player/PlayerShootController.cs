@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace ShatterShapes.Player
 {
-    public class PlayerShoot : MonoBehaviour
+    public class PlayerShootController : MonoBehaviour
     {
         [SerializeField] private Transform _gunTransform;
         [SerializeField] private ProjectilePooler _projectilePooler;
 
         private Projectile _currentProjectile;
-        private float _fireRate = .5f;
+        private float _fireRate = .33f;
         private float _lastFiredTime;
 
         private void Awake()

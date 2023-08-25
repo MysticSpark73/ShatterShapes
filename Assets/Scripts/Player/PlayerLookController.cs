@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ShatterShapes.Player
 {
-    public class PlayerLook : MonoBehaviour
+    public class PlayerLookController : MonoBehaviour
     {
         [SerializeField] private Transform _cameraTransform;
         
