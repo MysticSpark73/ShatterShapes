@@ -1,21 +1,47 @@
-using System.Collections;
 using System.Collections.Generic;
+using ShatterShapes.Core.Object_Pooling;
 using UnityEngine;
 
-namespace ShatterShapes
+namespace ShatterShapes.ShatteredObjects
 {
-    public class ShatteredObject : MonoBehaviour
+    public class ShatteredObject : MonoBehaviour, IPoolable
     {
-        // Start is called before the first frame update
-        void Start()
-        {
+        [SerializeField] private List<ShatteredPiece> _pieces;
         
+        public void OnPooled()
+        {
+            foreach (var piece in _pieces)
+            {
+                piece.Init();
+            }
         }
 
-        // Update is called once per frame
-        void Update()
+        public void OnReturn()
         {
-        
+            foreach (var piece in _pieces)
+            {
+                piece.ResetPiece();
+            }
+        }
+
+        public void SetPosition(Vector3 pos, Transform container = null)
+        {
+            transform.position = pos;
+            if (container != null)
+            {
+                transform.SetParent(container);
+            }
+        }
+
+        public void SetActive(bool value) => gameObject.SetActive(value);
+        public void SetParent(Transform parent) => transform.SetParent(parent);
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            foreach (var piece in _pieces)
+            {
+                piece.OnShatter();
+            }
         }
     }
 }
