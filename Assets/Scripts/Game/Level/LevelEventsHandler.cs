@@ -8,5 +8,7 @@ namespace ShatterShapes.Game.Level
         public static Action LevelReady;
         public static Action<ObjectsPool, IPoolable> ObjectExpired;
         public static Action<IPoolable> ProjectileExpired;
+        public static Action StageComplete;
+        public static Action ShapeObjectDamaged;
     }
 }

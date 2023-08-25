@@ -11,11 +11,15 @@ namespace ShatterShapes.ShatteredObjects
         [SerializeField] private List<ShatteredPiece> _pieces;
         [SerializeField] private Collider _selfCollider;
 
+        private bool _isShattered;
+
         public ObjectsPool KeyPool { get; set; }
+        public bool IsShattered => _isShattered;
 
         public void OnPooled()
         {
             _selfCollider.enabled = true;
+            _isShattered = false;
             Color color = Parameters.GetRandomLevelColor();
             foreach (var piece in _pieces)
             {
@@ -61,6 +65,8 @@ namespace ShatterShapes.ShatteredObjects
 
         private async void DestroyAsync()
         {
+            _isShattered = true;
+            LevelEventsHandler.ShapeObjectDamaged?.Invoke();
             await new WaitForSeconds(10);
             LevelEventsHandler.ObjectExpired?.Invoke(KeyPool, this);
         }

@@ -1,12 +1,24 @@
 using ShatterShapes.Core.Object_Pooling;
+using ShatterShapes.ShatteredObjects;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace ShatterShapes.Game.Level
 {
     public class LevelShapesCreator : MonoBehaviour
     {
+        [SerializeField] private levelStgeController _levelStgeController;
         [SerializeField] private Transform _objectsContainer;
         [SerializeField] private ObjectPooler _objectPooler;
+
+        private readonly Vector2Int distBounds = new Vector2Int(5, 10);
+        private readonly Vector2Int heightBounds = new Vector2Int(3, 6);
+
+
+        private void Awake()
+        {
+            LevelEventsHandler.StageComplete += OnStageComplete;
+        }
 
         public void CreateQuad(int a)
         {
@@ -84,11 +96,29 @@ namespace ShatterShapes.Game.Level
             }
         }
 
-        public void SetPosition(Vector3 pos) => transform.position = pos;
-
         private void PoolObject(Vector3 position)
         { 
             var obj = _objectPooler.SpawnFromPool(_objectPooler.GetRandomPool(), position, _objectsContainer);
+            var shatteredObject = obj as ShatteredObject;
+            if (shatteredObject != null)
+            {
+                _levelStgeController.AddToShape(shatteredObject);
+            }
+        }
+
+        private void OnStageComplete()
+        {
+            _levelStgeController.EraseShape();
+            SetRandomLocation();
+            CreateRandomShape();
+        }
+
+        private void SetRandomLocation()
+        {
+            transform.position = new Vector3(
+                Random.Range((float) distBounds.x, (float) distBounds.y),
+                Random.Range((float) heightBounds.x, (float) heightBounds.y),
+                Random.Range((float) distBounds.x, (float) distBounds.y));
         }
         
     }
