@@ -1,4 +1,6 @@
-﻿using ShatterShapes.Game.Input;
+﻿using ShatterShapes.Game;
+using ShatterShapes.Game.Input;
+using ShatterShapes.UI.Camera;
 using UnityEngine;
 
 namespace ShatterShapes.Player
@@ -6,23 +8,30 @@ namespace ShatterShapes.Player
     public class PlayerLookController : MonoBehaviour
     {
         [SerializeField] private Transform _cameraTransform;
-        
+
+        private CameraTransitionController _transitionController;
         private float _rotationX, _rotationY;
         private float _mouseSensitivity = 150;
 
         private void Awake()
         {
             InputEventsHandler.JoystickDirectionChanged += OnJoystickDirectionChanged;
+            _transitionController = new CameraTransitionController(_cameraTransform);
         }
 
         private void OnApplicationQuit()
         {
+            _transitionController.Dispose();
             InputEventsHandler.JoystickDirectionChanged -= OnJoystickDirectionChanged;
         }
+
+        public Transform GetTransform => transform;
 
         private void OnJoystickDirectionChanged(Vector2 dir)
         {
             if (dir == Vector2.zero) return;
+            if (GameStateController.CurrentGameState != GameState.Playing) return;
+
             _rotationX -= dir.x * _mouseSensitivity * Time.deltaTime;
             _rotationY -= dir.y * _mouseSensitivity * Time.deltaTime;
             _rotationX = Mathf.Clamp(_rotationX, -90, 90);

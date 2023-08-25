@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ShatterShapes.Extensions;
 using ShatterShapes.Game.Level;
+using ShatterShapes.ShatteredObjects;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

@@ -1,4 +1,5 @@
-﻿using ShatterShapes.Game.Input;
+﻿using ShatterShapes.Game;
+using ShatterShapes.Game.Input;
 using ShatterShapes.Game.Projectiles;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace ShatterShapes.Player
         [SerializeField] private ProjectilePooler _projectilePooler;
 
         private Projectile _currentProjectile;
-        private float _fireRate = .33f;
+        private float _fireRate = .25f;
         private float _lastFiredTime;
 
         private void Awake()
@@ -28,6 +29,8 @@ namespace ShatterShapes.Player
 
         private void OnPlayerFirePressed(Vector3 direction)
         {
+            if (GameStateController.CurrentGameState != GameState.Playing) return;
+
             if (Time.time - _lastFiredTime > _fireRate)
             {
                 _currentProjectile.Shoot(direction);

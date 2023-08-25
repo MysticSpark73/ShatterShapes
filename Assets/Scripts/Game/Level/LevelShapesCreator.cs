@@ -12,7 +12,7 @@ namespace ShatterShapes.Game.Level
         [SerializeField] private Transform _objectsContainer;
         [SerializeField] private ObjectPooler _objectPooler;
 
-        private readonly Vector2Int distBounds = new Vector2Int(5, 10);
+        private readonly Vector2Int distBounds = new Vector2Int(7, 12);
         private readonly Vector2Int heightBounds = new Vector2Int(3, 6);
 
 
@@ -31,6 +31,7 @@ namespace ShatterShapes.Game.Level
                     PoolObject(transform.position + offset);
                 }
             }
+            LevelEventsHandler.NewStageGenerated?.Invoke(transform.position);
         }
 
         public void CreateRect(int a, int b)
@@ -43,6 +44,7 @@ namespace ShatterShapes.Game.Level
                     PoolObject(transform.position + offset);
                 }
             }
+            LevelEventsHandler.NewStageGenerated?.Invoke(transform.position);
         }
 
         public void CreatePyramid(int h)
@@ -57,6 +59,7 @@ namespace ShatterShapes.Game.Level
                 }
                 blocks += 2;
             }
+            LevelEventsHandler.NewStageGenerated?.Invoke(transform.position);
         }
 
         public void CreateCircle(int r)
@@ -77,6 +80,7 @@ namespace ShatterShapes.Game.Level
                     PoolObject(transform.position + offset);
                 }
             }
+            LevelEventsHandler.NewStageGenerated?.Invoke(transform.position);
         }
 
         public void CreateRandomShape()
@@ -89,10 +93,10 @@ namespace ShatterShapes.Game.Level
                     CreateQuad(5);
                     break;
                 case 1:
-                    CreateRect(5, 7);
+                    CreateRect(4, 6);
                     break;
                 case 2: 
-                    CreatePyramid(5);
+                    CreatePyramid(4);
                     break;
                 case 3:
                     CreateCircle(4);
@@ -112,6 +116,7 @@ namespace ShatterShapes.Game.Level
 
         private void OnStageComplete()
         {
+            GameStateController.SetGameState(GameState.Transitioning);
             _levelStgeController.EraseShape();
             SetRandomLocation();
             CreateRandomShape();
@@ -120,6 +125,7 @@ namespace ShatterShapes.Game.Level
         private void SetRandomLocation()
         {
             transform.position = new Vector3(
+                 (Random.Range(0.0f, 1.0f) * 2 - 1) *
                 Random.Range((float) distBounds.x, (float) distBounds.y),
                 Random.Range((float) heightBounds.x, (float) heightBounds.y),
                 Random.Range((float) distBounds.x, (float) distBounds.y));

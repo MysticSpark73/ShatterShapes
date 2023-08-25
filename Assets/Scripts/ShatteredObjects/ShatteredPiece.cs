@@ -1,3 +1,4 @@
+using DG.Tweening;
 using ShatterShapes.Core;
 using UnityEngine;
 
@@ -12,8 +13,9 @@ namespace ShatterShapes.ShatteredObjects
         private Vector3 _initialLocalPosition;
         private Vector3 _initialLocalRotation;
         private Vector3 _initialLocalScale;
-            
+
         private float _shatterImpulse = 100;
+        private float _disappearTime = 10;
         
         public void Init(object[] args = null)
         {
@@ -38,7 +40,14 @@ namespace ShatterShapes.ShatteredObjects
         public void OnShatter()
         {
             _rigidbody.isKinematic = false;
+            ShrinkAsync();
             //_rigidbody.AddForce(-transform.forward * _shatterImpulse, ForceMode.Impulse);
+        }
+
+        public async void ShrinkAsync()
+        {
+            await new WaitForSeconds(_disappearTime / 10 * 8);
+            transform.DOScale(Vector3.zero, _disappearTime / 10 * 2);
         }
 
         public void SetColor(Color color) => _renderer.materials[0].color = color;

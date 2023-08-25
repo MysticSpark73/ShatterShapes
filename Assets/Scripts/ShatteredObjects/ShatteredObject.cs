@@ -12,6 +12,9 @@ namespace ShatterShapes.ShatteredObjects
         [SerializeField] private Collider _selfCollider;
 
         private bool _isShattered;
+        private float _disappearDuration = 12;
+
+        private readonly string _projectileTag = "Projectile";
 
         public ObjectsPool KeyPool { get; set; }
         public bool IsShattered => _isShattered;
@@ -52,22 +55,23 @@ namespace ShatterShapes.ShatteredObjects
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.CompareTag("Projectile"))
+            if (_isShattered) return;
+            if (collision.gameObject.CompareTag(_projectileTag))
             {
                 _selfCollider.enabled = false;
                 foreach (var piece in _pieces)
                 {
                     piece.OnShatter();
                 }
+                _isShattered = true;
+                LevelEventsHandler.ShapeObjectDamaged?.Invoke();
                 DestroyAsync();
             }
         }
 
         private async void DestroyAsync()
         {
-            _isShattered = true;
-            LevelEventsHandler.ShapeObjectDamaged?.Invoke();
-            await new WaitForSeconds(10);
+            await new WaitForSeconds(_disappearDuration);
             LevelEventsHandler.ObjectExpired?.Invoke(KeyPool, this);
         }
     }

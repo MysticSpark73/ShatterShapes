@@ -19,7 +19,7 @@ namespace ShatterShapes.Game.Level
             LoadLevelColors();
             _objectPooler.Init();
             _levelShapesCreator.CreateRandomShape();
-            LevelEventsHandler.LevelReady?.Invoke();
+            GameStateController.SetGameState(GameState.Playing);
         }
 
         private void LoadLevelColors()
