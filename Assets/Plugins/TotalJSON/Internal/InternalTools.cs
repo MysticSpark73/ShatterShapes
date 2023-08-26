@@ -156,7 +156,7 @@ namespace Leguar.TotalJSON.Internal {
 						return new JNumber((int)fieldValue);
 					}
 				}
-				Debug.LogError("Leguar.TotalJSON: InternalTools.serializeObject(): Internal error: Unexpected enum content");
+				//Debug.LogError("Leguar.TotalJSON: InternalTools.serializeObject(): Internal error: Unexpected enum content");
 			}
 			
 			JSON jsonSer = new JSON();
